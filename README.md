@@ -18,7 +18,7 @@ Você deverá desenvolver uma API REST para gerenciamento de produtos. Essa API 
   - Por faixa de preço
   - Por status (Ativo/Inativo)
   - Upload de imagem do produto
-  - Simular envio para a AWS S3 (pode ser salvo em disco ou usar MinIO local)
+  - Simular envio para a AWS S3 (pode ser salvo em disco ou usar MinIO local), ou algum outro similar.
 
 ---
 
