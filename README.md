@@ -1,72 +1,187 @@
-# 🧪 Prova Prática
+# 🛒 Product Catalog API
 
-Bem-vindo(a)! Esta é sua prova prática para a vaga de Desenvolvedor .NET. A ideia é simular um desafio realista do dia a dia de desenvolvimento.
+API REST para gerenciamento de catálogo de produtos desenvolvida em .NET 8 com arquitetura em camadas, seguindo princípios SOLID e Clean Architecture.
 
----
+## 🏗️ Arquitetura
 
-## 📦 Desafio: Cadastro e Consulta de Produtos
+O projeto está organizado em 4 camadas principais:
 
-Você deverá desenvolver uma API REST para gerenciamento de produtos. Essa API será usada para manter o catálogo de produtos de um e-commerce.
+- **ProductCatalog.Domain**: Entidades, enums, interfaces e regras de negócio
+- **ProductCatalog.Application**: Serviços de aplicação, DTOs e mapeamentos
+- **ProductCatalog.Infrastructure**: Implementação de repositórios, contexto do EF Core e serviços externos
+- **ProductCatalog.API**: Controllers, configurações e ponto de entrada da aplicação
+- **ProductCatalog.Tests**: Testes unitários e de integração
 
-### Funcionalidades obrigatórias:
+## 🚀 Funcionalidades
 
-- Cadastrar um novo produto
-- Editar produto existente
-- Excluir um produto
-- Consultar lista de produtos com filtros:
-  - Por categoria
-  - Por faixa de preço
-  - Por status (Ativo/Inativo)
-  - Upload de imagem do produto
-  - Simular envio para a AWS S3 (pode ser salvo em disco ou usar MinIO local), ou algum outro similar.
+### Endpoints Disponíveis
 
----
+- **GET** `/api/products` - Lista produtos com filtros opcionais
+- **GET** `/api/products/{id}` - Busca produto por ID
+- **POST** `/api/products` - Cria novo produto
+- **PUT** `/api/products/{id}` - Atualiza produto existente
+- **DELETE** `/api/products/{id}` - Remove produto
+- **PATCH** `/api/products/{id}/activate` - Ativa produto
+- **PATCH** `/api/products/{id}/deactivate` - Desativa produto
+- **POST** `/api/products/{id}/image` - Upload de imagem do produto
 
-## 🛠️ Requisitos Técnicos
+### Filtros Disponíveis
 
-- .NET 6 ou superior
-- API REST
-- Usar alguma arquitetura, por exemplo em camadas
-- Banco de dados relacional (PostgreSQL)
-- Documentando os endpoints, por exemplo com o Swagger
-- Testes em pelo menos uma parte da regra de negócio
+- Por categoria
+- Por faixa de preço (mínimo e máximo)
+- Por status (Ativo/Inativo)
+- Combinação de filtros
 
----
+## 🛠️ Tecnologias Utilizadas
 
-## ✨ Diferenciais (Bônus)
+- **.NET 8**
+- **ASP.NET Core Web API**
+- **Entity Framework Core 9.0**
+- **PostgreSQL**
+- **AutoMapper**
+- **Swagger/OpenAPI**
+- **xUnit** (testes)
+- **FluentAssertions** (testes)
+- **Moq** (mocks para testes)
+- **Docker & Docker Compose**
 
-Estes itens não são obrigatórios, mas contam pontos na avaliação:
+## 📋 Pré-requisitos
 
-- CI/CD (ex: GitHub Actions para build/test)
-- Diagrama da arquitetura ou documentação da estrutura do código
-- Docker (com docker-compose subindo app e banco)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Docker](https://www.docker.com/get-started) (para execução com containers)
+- [PostgreSQL](https://www.postgresql.org/download/) (para execução local sem Docker)
 
----
+## 🚀 Como Executar
 
-## ✅ Critérios de Avaliação
+### Opção 1: Com Docker (Recomendado)
 
-- Clareza e organização do código
-- Uso adequado de OOP e boas práticas (SOLID, Clean Code)
-- Estrutura dos endpoints e convenções REST
-- Cobertura e qualidade dos testes
-- Commits claros e bem organizados
-- Facilidade de execução do projeto
+1. Clone o repositório:
+```bash
+git clone <url-do-repositorio>
+cd prova-pratica
+```
 
----
+2. Execute com Docker Compose:
+```bash
+docker-compose up --build
+```
 
-## 🚀 Como Entregar
+3. Acesse a aplicação:
+   - API: http://localhost:8080
+   - Swagger: http://localhost:8080/swagger
 
-1. Faça um **fork deste repositório** ou clone e crie um repositório público seu.
-2. Desenvolva a prova no seu repositório.
-3. Inclua no seu README instruções claras para rodar o projeto localmente.
-4. Quando finalizar, envie o link do seu repositório para a pessoa responsável pelo processo.
+### Opção 2: Execução Local
 
----
+1. Clone o repositório:
+```bash
+git clone <url-do-repositorio>
+cd prova-pratica
+```
 
-## ⏰ Prazo
+2. Configure a string de conexão no `appsettings.json`:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=ProductCatalogDb;Username=postgres;Password=postgres"
+  }
+}
+```
 
-Você terá **3 à 5 dias úteis** para entregar a prova a partir da data de recebimento. Se precisar de mais tempo, avise!
+3. Restaure as dependências:
+```bash
+dotnet restore
+```
 
----
+4. Execute as migrações do banco:
+```bash
+dotnet ef database update --project ProductCatalog.Infrastructure --startup-project ProductCatalog.API
+```
 
-Boa sorte! 💻🚀
+5. Execute a aplicação:
+```bash
+dotnet run --project ProductCatalog.API
+```
+
+6. Acesse a aplicação:
+   - API: https://localhost:7001 ou http://localhost:5001
+   - Swagger: https://localhost:7001/swagger
+
+## 🧪 Executando os Testes
+
+```bash
+# Executar todos os testes
+dotnet test
+
+# Executar testes com relatório de cobertura
+dotnet test --collect:"XPlat Code Coverage"
+```
+
+## 📁 Estrutura do Projeto
+
+```
+ProductCatalog/
+├── ProductCatalog.API/           # Controllers e configurações da API
+├── ProductCatalog.Application/   # Serviços, DTOs e interfaces de aplicação
+├── ProductCatalog.Domain/        # Entidades, enums e interfaces de domínio
+├── ProductCatalog.Infrastructure/# Repositórios, contexto EF e serviços
+├── ProductCatalog.Tests/         # Testes unitários e de integração
+├── docker-compose.yml            # Configuração do Docker Compose
+├── Dockerfile                    # Imagem Docker da aplicação
+└── README.md                     # Este arquivo
+```
+
+## 🔧 Configurações
+
+### Variáveis de Ambiente (Docker)
+
+- `ASPNETCORE_ENVIRONMENT`: Ambiente da aplicação (Development/Production)
+- `ConnectionStrings__DefaultConnection`: String de conexão do PostgreSQL
+
+### Upload de Imagens
+
+As imagens são armazenadas localmente na pasta `uploads/` e servidas como arquivos estáticos.
+
+## 📊 Banco de Dados
+
+### Modelo de Dados
+
+**Tabela: Products**
+- Id (UUID, PK)
+- Name (string, obrigatório)
+- Description (string, opcional)
+- Price (decimal, obrigatório)
+- Category (string, obrigatório)
+- Status (enum: Active/Inactive)
+- ImageUrl (string, opcional)
+- CreatedAt (datetime)
+- UpdatedAt (datetime)
+
+### Índices
+
+- Category (para consultas por categoria)
+- Status (para filtros por status)
+- Price (para consultas por faixa de preço)
+
+## 🧪 Testes
+
+O projeto inclui testes para:
+
+- **Entidades de Domínio**: Validação de regras de negócio
+- **Serviços de Aplicação**: Lógica de negócio e mapeamentos
+- **Repositórios**: Operações de banco de dados (testes de integração)
+
+## 📝 Documentação da API
+
+A documentação completa da API está disponível através do Swagger UI quando a aplicação está em execução.
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
