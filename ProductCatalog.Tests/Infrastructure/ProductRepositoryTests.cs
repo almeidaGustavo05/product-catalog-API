@@ -31,7 +31,7 @@ public class ProductRepositoryTests : IDisposable
         await _context.SaveChangesAsync();
 
         result.Should().NotBeNull();
-        result.Id.Should().NotBeEmpty();
+        result.Id.Should().BeGreaterThan(0);
         
         var savedProduct = await _context.Products.FindAsync(result.Id);
         savedProduct.Should().NotBeNull();
@@ -57,7 +57,7 @@ public class ProductRepositoryTests : IDisposable
     [Fact]
     public async Task GetByIdAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
-        var nonExistentId = Guid.NewGuid();
+        var nonExistentId = 999;
 
         var result = await _repository.GetByIdAsync(nonExistentId);
 
@@ -114,8 +114,9 @@ public class ProductRepositoryTests : IDisposable
         await _repository.DeleteAsync(product.Id);
         await _context.SaveChangesAsync();
 
-        var deletedProduct = await _context.Products.FindAsync(product.Id);
-        deletedProduct.Should().BeNull();
+        var deletedProduct = await _context.Products.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == product.Id);
+        deletedProduct.Should().NotBeNull();
+        deletedProduct!.DeletedAt.Should().NotBeNull();
     }
 
     [Fact]
@@ -133,7 +134,7 @@ public class ProductRepositoryTests : IDisposable
     [Fact]
     public async Task ExistsAsync_ShouldReturnFalse_WhenProductDoesNotExist()
     {
-        var nonExistentId = Guid.NewGuid();
+        var nonExistentId = 999;
 
         var result = await _repository.ExistsAsync(nonExistentId);
 

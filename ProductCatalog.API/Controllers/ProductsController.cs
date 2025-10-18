@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Application.DTOs;
-using ProductCatalog.Application.Services;
+using ProductCatalog.Application.Interfaces;
 
 namespace ProductCatalog.API.Controllers;
 
@@ -42,7 +42,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
+    public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
         try
         {
@@ -81,7 +81,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<ProductDto>> UpdateProduct(Guid id, [FromBody] UpdateProductDto updateProductDto)
+    public async Task<ActionResult<ProductDto>> UpdateProduct(int id, [FromBody] UpdateProductDto updateProductDto)
     {
         try
         {
@@ -106,7 +106,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteProduct(Guid id)
+    public async Task<ActionResult> DeleteProduct(int id)
     {
         try
         {
@@ -124,7 +124,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{id}/activate")]
-    public async Task<ActionResult<ProductDto>> ActivateProduct(Guid id)
+    public async Task<ActionResult<ProductDto>> ActivateProduct(int id)
     {
         try
         {
@@ -142,7 +142,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{id}/deactivate")]
-    public async Task<ActionResult<ProductDto>> DeactivateProduct(Guid id)
+    public async Task<ActionResult<ProductDto>> DeactivateProduct(int id)
     {
         try
         {
@@ -160,7 +160,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("{id}/image")]
-    public async Task<ActionResult<ProductDto>> UploadImage(Guid id, IFormFile image)
+    public async Task<ActionResult<ProductDto>> UploadImage(int id, IFormFile image)
     {
         try
         {

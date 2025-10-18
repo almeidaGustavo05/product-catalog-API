@@ -1,5 +1,6 @@
 using AutoMapper;
 using ProductCatalog.Application.DTOs;
+using ProductCatalog.Application.Interfaces;
 using ProductCatalog.Domain.Entities;
 using ProductCatalog.Domain.Interfaces;
 
@@ -21,7 +22,7 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<ProductDto> GetByIdAsync(Guid id)
+    public async Task<ProductDto> GetByIdAsync(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -59,7 +60,7 @@ public class ProductService : IProductService
         return _mapper.Map<ProductDto>(createdProduct);
     }
 
-    public async Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto updateProductDto)
+    public async Task<ProductDto> UpdateAsync(int id, UpdateProductDto updateProductDto)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -75,7 +76,7 @@ public class ProductService : IProductService
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(int id)
     {
         var exists = await _productRepository.ExistsAsync(id);
         if (!exists)
@@ -90,7 +91,7 @@ public class ProductService : IProductService
         await _productRepository.DeleteAsync(id);
     }
 
-    public async Task<ProductDto> ActivateAsync(Guid id)
+    public async Task<ProductDto> ActivateAsync(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -101,7 +102,7 @@ public class ProductService : IProductService
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<ProductDto> DeactivateAsync(Guid id)
+    public async Task<ProductDto> DeactivateAsync(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -112,7 +113,7 @@ public class ProductService : IProductService
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<ProductDto> UploadImageAsync(Guid id, Stream imageStream, string fileName, string contentType)
+    public async Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
@@ -128,5 +129,22 @@ public class ProductService : IProductService
 
         await _productRepository.UpdateAsync(product);
         return _mapper.Map<ProductDto>(product);
+    }
+
+    public async Task<IEnumerable<ProductDto>> GetByCategoryAsync(string category)
+    {
+        var products = await _productRepository.GetFilteredAsync(category, null, null, null);
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+
+    public async Task<IEnumerable<ProductDto>> SearchAsync(string searchTerm)
+    {
+        var products = await _productRepository.GetAllAsync();
+        var filteredProducts = products.Where(p => 
+            p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            p.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            p.Category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+        
+        return _mapper.Map<IEnumerable<ProductDto>>(filteredProducts);
     }
 }

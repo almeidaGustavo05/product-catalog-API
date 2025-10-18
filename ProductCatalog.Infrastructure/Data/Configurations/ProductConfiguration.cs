@@ -15,7 +15,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.Id)
             .IsRequired()
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd();
 
         builder.Property(p => p.Name)
             .IsRequired()
@@ -46,10 +46,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder.Property(p => p.UpdatedAt)
-            .IsRequired();
+            .IsRequired(false);
+
+        builder.Property(p => p.DeletedAt)
+            .IsRequired(false);
 
         builder.HasIndex(p => p.Category);
         builder.HasIndex(p => p.Status);
         builder.HasIndex(p => p.Price);
+        builder.HasIndex(p => p.DeletedAt);
     }
 }

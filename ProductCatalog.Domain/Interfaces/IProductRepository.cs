@@ -5,7 +5,7 @@ namespace ProductCatalog.Domain.Interfaces;
 
 public interface IProductRepository
 {
-    Task<Product?> GetByIdAsync(Guid id);
+    Task<Product?> GetByIdAsync(int id);
     Task<IEnumerable<Product>> GetAllAsync();
     Task<IEnumerable<Product>> GetByCategoryAsync(string category);
     Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
@@ -13,6 +13,6 @@ public interface IProductRepository
     Task<IEnumerable<Product>> GetFilteredAsync(string? category = null, decimal? minPrice = null, decimal? maxPrice = null, ProductStatus? status = null);
     Task<Product> AddAsync(Product product);
     Task UpdateAsync(Product product);
-    Task DeleteAsync(Guid id);
-    Task<bool> ExistsAsync(Guid id);
+    Task DeleteAsync(int id);
+    Task<bool> ExistsAsync(int id);
 }

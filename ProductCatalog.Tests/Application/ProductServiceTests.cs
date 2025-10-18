@@ -39,7 +39,7 @@ public class ProductServiceTests
     [Fact]
     public async Task GetByIdAsync_ShouldReturnProduct_WhenProductExists()
     {
-        var productId = Guid.NewGuid();
+        var productId = 1;
         var product = new Product("Produto Teste", "Descrição", 99.99m, "Eletrônicos");
         
         _mockProductRepository.Setup(x => x.GetByIdAsync(productId))
@@ -57,7 +57,7 @@ public class ProductServiceTests
     [Fact]
     public async Task GetByIdAsync_ShouldThrowKeyNotFoundException_WhenProductDoesNotExist()
     {
-        var productId = Guid.NewGuid();
+        var productId = 999;
         _mockProductRepository.Setup(x => x.GetByIdAsync(productId))
             .ReturnsAsync((Product?)null);
 
@@ -95,7 +95,7 @@ public class ProductServiceTests
     [Fact]
     public async Task UpdateAsync_ShouldUpdateProduct_WhenProductExists()
     {
-        var productId = Guid.NewGuid();
+        var productId = 1;
         var existingProduct = new Product("Produto Original", "Descrição Original", 50m, "Categoria Original");
         var updateDto = new UpdateProductDto
         {
@@ -122,7 +122,7 @@ public class ProductServiceTests
     [Fact]
     public async Task UpdateAsync_ShouldThrowKeyNotFoundException_WhenProductDoesNotExist()
     {
-        var productId = Guid.NewGuid();
+        var productId = 999;
         var updateDto = new UpdateProductDto
         {
             Name = "Produto Atualizado",
@@ -142,7 +142,7 @@ public class ProductServiceTests
     [Fact]
     public async Task DeleteAsync_ShouldDeleteProduct_WhenProductExists()
     {
-        var productId = Guid.NewGuid();
+        var productId = 1;
         var product = new Product("Produto", "Descrição", 99.99m, "Categoria");
 
         _mockProductRepository.Setup(x => x.ExistsAsync(productId))
@@ -158,7 +158,7 @@ public class ProductServiceTests
     [Fact]
     public async Task DeleteAsync_ShouldThrowKeyNotFoundException_WhenProductDoesNotExist()
     {
-        var productId = Guid.NewGuid();
+        var productId = 999;
 
         _mockProductRepository.Setup(x => x.ExistsAsync(productId))
             .ReturnsAsync(false);
@@ -171,7 +171,7 @@ public class ProductServiceTests
     [Fact]
     public async Task ActivateAsync_ShouldActivateProduct_WhenProductExists()
     {
-        var productId = Guid.NewGuid();
+        var productId = 1;
         var product = new Product("Produto", "Descrição", 99.99m, "Categoria");
         product.Deactivate();
 
@@ -187,7 +187,7 @@ public class ProductServiceTests
     [Fact]
     public async Task DeactivateAsync_ShouldDeactivateProduct_WhenProductExists()
     {
-        var productId = Guid.NewGuid();
+        var productId = 1;
         var product = new Product("Produto", "Descrição", 99.99m, "Categoria");
 
         _mockProductRepository.Setup(x => x.GetByIdAsync(productId))

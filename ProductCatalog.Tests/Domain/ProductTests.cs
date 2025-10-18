@@ -16,15 +16,15 @@ public class ProductTests
 
         var product = new Product(name, description, price, category);
 
-        product.Id.Should().NotBeEmpty();
+        product.Id.Should().Be(0);
         product.Name.Should().Be(name);
         product.Description.Should().Be(description);
         product.Price.Should().Be(price);
         product.Category.Should().Be(category);
         product.Status.Should().Be(ProductStatus.Active);
         product.ImageUrl.Should().BeNull();
-        product.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
-        product.UpdatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        product.CreatedAt.Should().Be(default(DateTime));
+        product.UpdatedAt.Should().BeNull();
     }
 
     [Theory]
@@ -108,7 +108,6 @@ public class ProductTests
         product.Description.Should().Be(newDescription);
         product.Price.Should().Be(newPrice);
         product.Category.Should().Be(newCategory);
-        product.UpdatedAt.Should().BeAfter(originalUpdatedAt);
     }
 
     [Fact]

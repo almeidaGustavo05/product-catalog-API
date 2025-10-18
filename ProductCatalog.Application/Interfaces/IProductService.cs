@@ -1,16 +1,18 @@
-using ProductCatalog.Application.DTOs;
+namespace ProductCatalog.Application.Interfaces;
 
-namespace ProductCatalog.Application.Services;
+using ProductCatalog.Application.DTOs;
 
 public interface IProductService
 {
-    Task<ProductDto> GetByIdAsync(Guid id);
+    Task<ProductDto> GetByIdAsync(int id);
     Task<IEnumerable<ProductDto>> GetAllAsync();
+    Task<IEnumerable<ProductDto>> GetByCategoryAsync(string category);
     Task<IEnumerable<ProductDto>> GetFilteredAsync(ProductFilterDto filter);
     Task<ProductDto> CreateAsync(CreateProductDto createProductDto);
-    Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto updateProductDto);
-    Task DeleteAsync(Guid id);
-    Task<ProductDto> ActivateAsync(Guid id);
-    Task<ProductDto> DeactivateAsync(Guid id);
-    Task<ProductDto> UploadImageAsync(Guid id, Stream imageStream, string fileName, string contentType);
+    Task<ProductDto> UpdateAsync(int id, UpdateProductDto updateProductDto);
+    Task DeleteAsync(int id);
+    Task<ProductDto> ActivateAsync(int id);
+    Task<ProductDto> DeactivateAsync(int id);
+    Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType);
+    Task<IEnumerable<ProductDto>> SearchAsync(string searchTerm);
 }
