@@ -1,5 +1,6 @@
 namespace ProductCatalog.Application.Interfaces;
 
+using Microsoft.AspNetCore.Http;
 using ProductCatalog.Application.DTOs;
 
 public interface IProductService
@@ -11,6 +12,6 @@ public interface IProductService
     Task<ProductDto> CreateAsync(CreateProductDto createProductDto);
     Task<ProductDto> UpdateAsync(int id, UpdateProductDto updateProductDto);
     Task DeleteAsync(int id);
-    Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType);
+    Task<ProductDto> UploadImageAsync(int id, IFormFile image);
     Task<IEnumerable<ProductDto>> SearchAsync(string searchTerm);
 }

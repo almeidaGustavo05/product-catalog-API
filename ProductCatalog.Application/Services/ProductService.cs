@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using ProductCatalog.Application.DTOs;
 using ProductCatalog.Application.Interfaces;
 using ProductCatalog.Domain.Entities;
@@ -94,8 +95,16 @@ public class ProductService : IProductService
 
 
 
-    public async Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType)
+    public async Task<ProductDto> UploadImageAsync(int id, IFormFile image)
     {
+        var imageValidator = new Validators.ImageUploadValidator();
+        var validationResult = await imageValidator.ValidateAsync(image);
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
+            throw new ArgumentException($"Imagem inválida: {errors}");
+        }
+
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null)
             throw new KeyNotFoundException($"Produto com ID {id} não encontrado.");
@@ -105,7 +114,8 @@ public class ProductService : IProductService
             await _imageStorageService.DeleteImageAsync(product.ImageUrl);
         }
 
-        var imageUrl = await _imageStorageService.UploadImageAsync(imageStream, fileName, contentType);
+        using var stream = image.OpenReadStream();
+        var imageUrl = await _imageStorageService.UploadImageAsync(stream, image.FileName, image.ContentType);
         product.SetImageUrl(imageUrl);
 
         await _productRepository.UpdateAsync(product);

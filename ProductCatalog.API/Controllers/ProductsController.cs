@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Application.DTOs;
 using ProductCatalog.Application.Interfaces;
-using ProductCatalog.Application.Validators;
 
 namespace ProductCatalog.API.Controllers;
 
@@ -10,12 +9,10 @@ namespace ProductCatalog.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
-    private readonly ImageUploadValidator _imageValidator;
 
-    public ProductsController(IProductService productService, ImageUploadValidator imageValidator)
+    public ProductsController(IProductService productService)
     {
         _productService = productService;
-        _imageValidator = imageValidator;
     }
 
     [HttpGet]
@@ -68,15 +65,7 @@ public class ProductsController : ControllerBase
     [HttpPost("{id}/image")]
     public async Task<ActionResult<ProductDto>> UploadImage(int id, IFormFile image)
     {
-        var validationResult = await _imageValidator.ValidateAsync(image);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors.Select(e => new { message = e.ErrorMessage }));
-        }
-
-        using var stream = image.OpenReadStream();
-        var product = await _productService.UploadImageAsync(id, stream, image.FileName, image.ContentType);
-        
+        var product = await _productService.UploadImageAsync(id, image);
         return Ok(product);
     }
 }
