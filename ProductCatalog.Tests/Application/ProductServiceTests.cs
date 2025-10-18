@@ -169,31 +169,49 @@ public class ProductServiceTests
     }
 
     [Fact]
-    public async Task ActivateAsync_ShouldActivateProduct_WhenProductExists()
+    public async Task UpdateAsync_ShouldActivateProduct_WhenStatusIsActive()
     {
         var productId = 1;
         var product = new Product("Produto", "Descrição", 99.99m, "Categoria");
         product.Deactivate();
 
+        var updateDto = new UpdateProductDto
+        {
+            Name = "Produto Atualizado",
+            Description = "Descrição Atualizada",
+            Price = 89.99m,
+            Category = "Nova Categoria",
+            Status = ProductStatus.Active
+        };
+
         _mockProductRepository.Setup(x => x.GetByIdAsync(productId))
             .ReturnsAsync(product);
 
-        var result = await _productService.ActivateAsync(productId);
+        var result = await _productService.UpdateAsync(productId, updateDto);
 
         result.Status.Should().Be(ProductStatus.Active);
         _mockProductRepository.Verify(x => x.UpdateAsync(product), Times.Once);
     }
 
     [Fact]
-    public async Task DeactivateAsync_ShouldDeactivateProduct_WhenProductExists()
+    public async Task UpdateAsync_ShouldDeactivateProduct_WhenStatusIsInactive()
     {
         var productId = 1;
         var product = new Product("Produto", "Descrição", 99.99m, "Categoria");
 
+        var updateDto = new UpdateProductDto
+        {
+            Name = "Produto Atualizado",
+            Description = "Descrição Atualizada",
+            Price = 89.99m,
+            Category = "Nova Categoria",
+            Status = ProductStatus.Inactive
+        };
+
         _mockProductRepository.Setup(x => x.GetByIdAsync(productId))
             .ReturnsAsync(product);
 
-        var result = await _productService.DeactivateAsync(productId);
+        var result = await _productService.UpdateAsync(productId, updateDto);
 
         result.Status.Should().Be(ProductStatus.Inactive);
         _mockProductRepository.Verify(x => x.UpdateAsync(product), Times.Once);

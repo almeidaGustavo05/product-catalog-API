@@ -70,7 +70,8 @@ public class ProductService : IProductService
             updateProductDto.Name,
             updateProductDto.Description,
             updateProductDto.Price,
-            updateProductDto.Category);
+            updateProductDto.Category,
+            updateProductDto.Status);
 
         await _productRepository.UpdateAsync(product);
         return _mapper.Map<ProductDto>(product);
@@ -91,27 +92,7 @@ public class ProductService : IProductService
         await _productRepository.DeleteAsync(id);
     }
 
-    public async Task<ProductDto> ActivateAsync(int id)
-    {
-        var product = await _productRepository.GetByIdAsync(id);
-        if (product == null)
-            throw new KeyNotFoundException($"Produto com ID {id} não encontrado.");
 
-        product.Activate();
-        await _productRepository.UpdateAsync(product);
-        return _mapper.Map<ProductDto>(product);
-    }
-
-    public async Task<ProductDto> DeactivateAsync(int id)
-    {
-        var product = await _productRepository.GetByIdAsync(id);
-        if (product == null)
-            throw new KeyNotFoundException($"Produto com ID {id} não encontrado.");
-
-        product.Deactivate();
-        await _productRepository.UpdateAsync(product);
-        return _mapper.Map<ProductDto>(product);
-    }
 
     public async Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType)
     {

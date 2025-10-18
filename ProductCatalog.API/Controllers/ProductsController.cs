@@ -65,20 +65,6 @@ public class ProductsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("{id}/activate")]
-    public async Task<ActionResult<ProductDto>> ActivateProduct(int id)
-    {
-        var product = await _productService.ActivateAsync(id);
-        return Ok(product);
-    }
-
-    [HttpPatch("{id}/deactivate")]
-    public async Task<ActionResult<ProductDto>> DeactivateProduct(int id)
-    {
-        var product = await _productService.DeactivateAsync(id);
-        return Ok(product);
-    }
-
     [HttpPost("{id}/image")]
     public async Task<ActionResult<ProductDto>> UploadImage(int id, IFormFile image)
     {

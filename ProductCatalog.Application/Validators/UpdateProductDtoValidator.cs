@@ -28,5 +28,9 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
             .WithMessage("Categoria é obrigatória")
             .MaximumLength(100)
             .WithMessage("Categoria deve ter no máximo 100 caracteres");
+
+        RuleFor(x => x.Status)
+            .IsInEnum()
+            .WithMessage("Status deve ser um valor válido (Active ou Inactive)");
     }
 }

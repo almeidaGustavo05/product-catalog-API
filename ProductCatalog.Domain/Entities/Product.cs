@@ -24,12 +24,13 @@ public class Product : BaseEntity
         ValidateProduct();
     }
 
-    public void UpdateProduct(string name, string description, decimal price, string category)
+    public void UpdateProduct(string name, string description, decimal price, string category, ProductStatus status)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Description = description ?? throw new ArgumentNullException(nameof(description));
         Price = price;
         Category = category ?? throw new ArgumentNullException(nameof(category));
+        Status = status;
 
         ValidateProduct();
     }

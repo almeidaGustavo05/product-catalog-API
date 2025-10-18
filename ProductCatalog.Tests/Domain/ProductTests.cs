@@ -101,13 +101,15 @@ public class ProductTests
         var newDescription = "Descrição Atualizada";
         var newPrice = 75m;
         var newCategory = "Nova Categoria";
+        var newStatus = ProductStatus.Inactive;
 
-        product.UpdateProduct(newName, newDescription, newPrice, newCategory);
+        product.UpdateProduct(newName, newDescription, newPrice, newCategory, newStatus);
 
         product.Name.Should().Be(newName);
         product.Description.Should().Be(newDescription);
         product.Price.Should().Be(newPrice);
         product.Category.Should().Be(newCategory);
+        product.Status.Should().Be(newStatus);
     }
 
     [Fact]

@@ -92,7 +92,7 @@ public class ProductRepositoryTests : IDisposable
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
-        product.UpdateProduct("Produto Atualizado", "Descrição Atualizada", 75m, "Nova Categoria");
+        product.UpdateProduct("Produto Atualizado", "Descrição Atualizada", 75m, "Nova Categoria", ProductStatus.Inactive);
         await _repository.UpdateAsync(product);
         await _context.SaveChangesAsync();
 

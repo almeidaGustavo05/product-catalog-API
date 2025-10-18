@@ -11,8 +11,6 @@ public interface IProductService
     Task<ProductDto> CreateAsync(CreateProductDto createProductDto);
     Task<ProductDto> UpdateAsync(int id, UpdateProductDto updateProductDto);
     Task DeleteAsync(int id);
-    Task<ProductDto> ActivateAsync(int id);
-    Task<ProductDto> DeactivateAsync(int id);
     Task<ProductDto> UploadImageAsync(int id, Stream imageStream, string fileName, string contentType);
     Task<IEnumerable<ProductDto>> SearchAsync(string searchTerm);
 }
