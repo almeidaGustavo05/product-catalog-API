@@ -22,7 +22,7 @@ services:
     depends_on:
       - postgres
     environment:
-      ConnectionString__DbConfig: "Host=postgres;Database=productcatalogdb;Username=productcatalogadmin;Password=senha"
+      - ConnectionStrings__DbConfig=Host=postgres;Database=productcatalogdb;Username=productcatalogadmin;Password=senha
     ports:
       - "80:80"
     restart: unless-stopped

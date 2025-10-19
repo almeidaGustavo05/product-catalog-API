@@ -1,7 +1,6 @@
 using ProductCatalog.API.Middleware;
 using ProductCatalog.Application;
 using ProductCatalog.Infrastructure;
-using ProductCatalog.Infrastructure.Data;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 
@@ -36,15 +35,12 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product Catalog API V1");
-        c.RoutePrefix = string.Empty;
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product Catalog API V1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.UseStaticFiles();
 
@@ -55,11 +51,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ProductCatalogDbContext>();
-    context.Database.EnsureCreated();
-}
 
 app.Run();

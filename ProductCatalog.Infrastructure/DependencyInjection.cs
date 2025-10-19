@@ -13,8 +13,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // Entity Framework
+        var connectionString = configuration.GetConnectionString("DbConfig") ?? configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<ProductCatalogDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(connectionString));
 
         // Repositories
         services.AddScoped<IProductRepository, ProductRepository>();
