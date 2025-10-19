@@ -1,14 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using ProductCatalog.Application.Mappings;
-using ProductCatalog.Application.Services;
-using ProductCatalog.Application.Interfaces;
-using ProductCatalog.Domain.Interfaces;
-using ProductCatalog.Infrastructure.Data;
-using ProductCatalog.Infrastructure.Repositories;
-using ProductCatalog.Infrastructure.Services;
 using ProductCatalog.API.Middleware;
-using ProductCatalog.Application.Validators;
-using FluentValidation;
+using ProductCatalog.Application;
+using ProductCatalog.Infrastructure;
+using ProductCatalog.Infrastructure.Data;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 
@@ -18,19 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssembly(typeof(CreateProductDtoValidator).Assembly);
 
-builder.Services.AddDbContext<ProductCatalogDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddAutoMapper(cfg =>
-{
-    cfg.AddProfile<ProductMappingProfile>();
-});
-
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

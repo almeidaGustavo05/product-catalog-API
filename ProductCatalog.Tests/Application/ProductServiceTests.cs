@@ -15,6 +15,7 @@ public class ProductServiceTests
 {
     private readonly Mock<IProductRepository> _mockProductRepository;
     private readonly Mock<IImageStorageService> _mockImageStorageService;
+    private readonly Mock<ILogger<ProductService>> _mockLogger;
     private readonly IMapper _mapper;
     private readonly ProductService _productService;
 
@@ -22,6 +23,7 @@ public class ProductServiceTests
     {
         _mockProductRepository = new Mock<IProductRepository>();
         _mockImageStorageService = new Mock<IImageStorageService>();
+        _mockLogger = new Mock<ILogger<ProductService>>();
         
         var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
         var configuration = new MapperConfiguration(cfg =>
@@ -33,7 +35,8 @@ public class ProductServiceTests
         _productService = new ProductService(
             _mockProductRepository.Object,
             _mockImageStorageService.Object,
-            _mapper);
+            _mapper,
+            _mockLogger.Object);
     }
 
     [Fact]
