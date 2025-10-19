@@ -34,6 +34,18 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+var webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+if (!Directory.Exists(webRootPath))
+{
+    Directory.CreateDirectory(webRootPath);
+}
+
+var imagesPath = Path.Combine(webRootPath, "images");
+if (!Directory.Exists(imagesPath))
+{
+    Directory.CreateDirectory(imagesPath);
+}
+
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -43,6 +55,12 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(imagesPath),
+    RequestPath = "/images"
+});
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 

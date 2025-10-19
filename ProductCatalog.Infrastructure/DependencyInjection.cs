@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ProductCatalog.Domain.Interfaces;
 using ProductCatalog.Infrastructure.Data;
 using ProductCatalog.Infrastructure.Repositories;
@@ -21,7 +22,12 @@ public static class DependencyInjection
         services.AddScoped<IProductRepository, ProductRepository>();
 
         // Infrastructure Services
-        services.AddScoped<IImageStorageService, LocalImageStorageService>();
+        services.AddScoped<IImageStorageService>(provider =>
+        {
+            var logger = provider.GetRequiredService<ILogger<LocalImageStorageService>>();
+            var webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            return new LocalImageStorageService(logger, webRootPath, "/images");
+        });
 
         return services;
     }
