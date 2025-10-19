@@ -81,7 +81,7 @@ docker-compose up --build
 
 3. **Acesse a aplicação:**
    - **API Base:** http://localhost
-   - **Swagger UI:** http://localhost/swagger
+   - **Swagger UI:** http://localhost/index.html
    - **Banco PostgreSQL:** localhost:5432
 
 > **Nota:** O Docker Compose irá:
