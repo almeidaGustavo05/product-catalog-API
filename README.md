@@ -16,7 +16,15 @@ O projeto está organizado em 4 camadas principais:
 
 ### Endpoints Disponíveis
 
-- **GET** `/api/products` - Lista produtos com filtros opcionais
+- **GET** `/api/products` - Lista produtos com filtros opcionais e paginação
+  - **Parâmetros de Paginação:**
+    - `pageNumber` (opcional): Número da página (padrão: 1)
+    - `pageSize` (opcional): Itens por página (padrão: 10, máximo: 50)
+  - **Parâmetros de Filtro:**
+    - `category` (opcional): Filtrar por categoria
+    - `minPrice` (opcional): Preço mínimo
+    - `maxPrice` (opcional): Preço máximo
+    - `status` (opcional): Status do produto (0=Inactive, 1=Active)
 - **GET** `/api/products/{id}` - Busca produto por ID
 - **POST** `/api/products` - Cria novo produto
 - **PUT** `/api/products/{id}` - Atualiza produto existente
@@ -191,6 +199,40 @@ curl -X GET "http://localhost/api/products/1"
 curl -X GET "http://localhost/api/products?category=Eletrônicos&minPrice=1000&maxPrice=2000"
 ```
 
+**Listar produtos com paginação:**
+```bash
+# Primeira página com 5 itens
+curl -X GET "http://localhost/api/products?pageNumber=1&pageSize=5"
+
+# Segunda página com filtro por categoria
+curl -X GET "http://localhost/api/products?category=Eletrônicos&pageNumber=2&pageSize=3"
+```
+
+**Upload de imagem para um produto:**
+```bash
+# Fazer upload de uma imagem para o produto ID 1
+curl -X POST "http://localhost/api/products/1/image" \
+  -H "Content-Type: multipart/form-data" \
+  -F "image=@/caminho/para/sua/imagem.jpg"
+```
+
+**Atualizar um produto:**
+```bash
+curl -X PUT "http://localhost/api/products/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Smartphone Samsung Galaxy S24",
+    "description": "Smartphone com 256GB de armazenamento",
+    "price": 1599.99,
+    "category": "Eletrônicos"
+  }'
+```
+
+**Deletar um produto:**
+```bash
+curl -X DELETE "http://localhost/api/products/1"
+```
+
 ## 📁 Estrutura do Projeto
 
 ```
@@ -204,6 +246,7 @@ ProductCatalog/
 │   ├── DTOs/                     # Data Transfer Objects
 │   ├── Interfaces/               # Interfaces de serviços de aplicação
 │   ├── Mappings/                 # Perfis do AutoMapper
+│   ├── Pagination/               # Classes para paginação (PageList, PageParams)
 │   ├── Services/                 # Implementação dos serviços
 │   └── Validators/               # Validadores FluentValidation
 ├── ProductCatalog.Domain/        # Entidades, enums e interfaces de domínio
@@ -237,10 +280,28 @@ ProductCatalog/
 - **Senha:** senha (Docker) / postgres (local)
 
 ### Upload de Imagens
-- As imagens são armazenadas localmente na pasta `uploads/`
+- As imagens são armazenadas localmente na pasta `wwwroot/images/`
 - Formatos aceitos: JPG, JPEG, PNG, GIF
 - Tamanho máximo: 5MB
 - As imagens são servidas como arquivos estáticos
+
+#### Como verificar o upload de uma foto:
+1. **Fazer upload via Swagger UI:**
+   - Acesse http://localhost/swagger
+   - Localize o endpoint `POST /api/products/{id}/image`
+   - Clique em "Try it out"
+   - Insira o ID do produto
+   - Selecione uma imagem no campo "image"
+   - Execute a requisição
+
+2. **Verificar se a imagem foi salva:**
+   - A imagem será salva na pasta `wwwroot/images/` do container
+   - O campo `ImageUrl` do produto será atualizado com o caminho da imagem
+   - Você pode verificar fazendo um GET do produto para ver a URL da imagem
+
+3. **Acessar a imagem:**
+   - As imagens ficam disponíveis em: `http://localhost/images/nome-da-imagem.jpg`
+   - O nome do arquivo é gerado automaticamente com um GUID para evitar conflitos
 
 ## 📊 Modelo de Dados
 
@@ -315,6 +376,7 @@ dotnet ef database update --project ProductCatalog.Infrastructure --startup-proj
 - Ou pare outros serviços que estejam usando as mesmas portas
 
 **Problemas com upload de imagens:**
-- Verifique se a pasta `uploads/` tem permissões de escrita
+- Verifique se a pasta `wwwroot/images/` tem permissões de escrita
 - Confirme o tamanho máximo do arquivo (5MB)
 - Verifique o formato do arquivo (JPG, PNG, GIF)
+- Certifique-se de que o produto existe antes de fazer upload da imagem
