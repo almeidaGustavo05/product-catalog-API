@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Application.DTOs;
 using ProductCatalog.Application.Interfaces;
+using ProductCatalog.Domain.Pagination;
 
 namespace ProductCatalog.API.Controllers;
 
@@ -32,6 +33,21 @@ public class ProductsController : ControllerBase
 
         var products = await _productService.GetFilteredAsync(filter);
         return Ok(products);
+    }
+
+    [HttpGet("paged")]
+    public async Task<ActionResult<PageList<ProductDto>>> GetProductsPaged(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var pageParams = new PageParams
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
+        var pagedProducts = await _productService.GetPagedAsync(pageParams);
+        return Ok(pagedProducts);
     }
 
     [HttpGet("{id}")]

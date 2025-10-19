@@ -1,5 +1,6 @@
 using ProductCatalog.Domain.Entities;
 using ProductCatalog.Domain.Enums;
+using ProductCatalog.Domain.Pagination;
 
 namespace ProductCatalog.Domain.Interfaces;
 
@@ -7,6 +8,7 @@ public interface IProductRepository
 {
     Task<Product?> GetByIdAsync(int id);
     Task<IEnumerable<Product>> GetAllAsync();
+    Task<PageList<Product>> GetPagedAsync(PageParams pageParams);
     Task<IEnumerable<Product>> GetByCategoryAsync(string category);
     Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
     Task<IEnumerable<Product>> GetByStatusAsync(ProductStatus status);

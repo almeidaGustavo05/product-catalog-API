@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductCatalog.Domain.Entities;
 using ProductCatalog.Domain.Enums;
 using ProductCatalog.Domain.Interfaces;
+using ProductCatalog.Domain.Pagination;
 using ProductCatalog.Infrastructure.Data;
 
 namespace ProductCatalog.Infrastructure.Repositories;
@@ -24,6 +25,20 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
         return await _context.Products.ToListAsync();
+    }
+
+    public async Task<PageList<Product>> GetPagedAsync(PageParams pageParams)
+    {
+        var query = _context.Products.AsQueryable();
+        
+        var totalCount = await query.CountAsync();
+        
+        var items = await query
+            .Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
+            .Take(pageParams.PageSize)
+            .ToListAsync();
+            
+        return new PageList<Product>(items, totalCount, pageParams.PageNumber, pageParams.PageSize);
     }
 
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string category)

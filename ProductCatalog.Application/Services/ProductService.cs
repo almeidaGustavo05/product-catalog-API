@@ -5,6 +5,7 @@ using ProductCatalog.Application.Interfaces;
 using ProductCatalog.Application.DTOs;
 using ProductCatalog.Domain.Entities;
 using ProductCatalog.Domain.Interfaces;
+using ProductCatalog.Domain.Pagination;
 
 namespace ProductCatalog.Application.Services;
 
@@ -50,6 +51,21 @@ public class ProductService : IProductService
         
         _logger.LogInformation("Encontrados {ProductCount} produtos", products.Count());
         return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+
+    public async Task<PageList<ProductDto>> GetPagedAsync(PageParams pageParams)
+    {
+        _logger.LogInformation("Buscando produtos paginados - Página: {PageNumber}, Tamanho: {PageSize}", 
+            pageParams.PageNumber, pageParams.PageSize);
+        
+        var pagedProducts = await _productRepository.GetPagedAsync(pageParams);
+        
+        var productDtos = _mapper.Map<List<ProductDto>>(pagedProducts.Items);
+        
+        _logger.LogInformation("Encontrados {TotalCount} produtos no total, retornando {ItemCount} produtos da página {CurrentPage}", 
+            pagedProducts.TotalCount, productDtos.Count, pagedProducts.CurrentPage);
+            
+        return new PageList<ProductDto>(productDtos, pagedProducts.TotalCount, pagedProducts.CurrentPage, pagedProducts.PageSize);
     }
 
     public async Task<IEnumerable<ProductDto>> GetFilteredAsync(ProductFilterDto filter)
