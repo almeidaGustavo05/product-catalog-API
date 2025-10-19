@@ -17,11 +17,13 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
+    public async Task<ActionResult<PageList<ProductDto>>> GetProducts(
         [FromQuery] string? category = null,
         [FromQuery] decimal? minPrice = null,
         [FromQuery] decimal? maxPrice = null,
-        [FromQuery] Domain.Enums.ProductStatus? status = null)
+        [FromQuery] Domain.Enums.ProductStatus? status = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
     {
         var filter = new ProductFilterDto
         {
@@ -31,22 +33,13 @@ public class ProductsController : ControllerBase
             Status = status
         };
 
-        var products = await _productService.GetFilteredAsync(filter);
-        return Ok(products);
-    }
-
-    [HttpGet("paged")]
-    public async Task<ActionResult<PageList<ProductDto>>> GetProductsPaged(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10)
-    {
         var pageParams = new PageParams
         {
             PageNumber = pageNumber,
             PageSize = pageSize
         };
 
-        var pagedProducts = await _productService.GetPagedAsync(pageParams);
+        var pagedProducts = await _productService.GetFilteredPagedAsync(filter, pageParams);
         return Ok(pagedProducts);
     }
 

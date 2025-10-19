@@ -9,6 +9,7 @@ public interface IProductService
     Task<ProductDto> GetByIdAsync(int id);
     Task<IEnumerable<ProductDto>> GetAllAsync();
     Task<PageList<ProductDto>> GetPagedAsync(PageParams pageParams);
+    Task<PageList<ProductDto>> GetFilteredPagedAsync(ProductFilterDto filter, PageParams pageParams);
     Task<IEnumerable<ProductDto>> GetFilteredAsync(ProductFilterDto filter);
     Task<ProductDto> CreateAsync(CreateProductDto createProductDto);
     Task<ProductDto> UpdateAsync(int id, UpdateProductDto updateProductDto);

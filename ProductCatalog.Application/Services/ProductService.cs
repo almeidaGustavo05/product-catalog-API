@@ -83,6 +83,37 @@ public class ProductService : IProductService
         return _mapper.Map<IEnumerable<ProductDto>>(products);
     }
 
+    public async Task<PageList<ProductDto>> GetFilteredPagedAsync(ProductFilterDto filter, PageParams pageParams)
+    {
+        _logger.LogInformation("Buscando produtos paginados com filtros - Página: {PageNumber}, Tamanho: {PageSize}", 
+            pageParams.PageNumber, pageParams.PageSize);
+
+        if (string.IsNullOrEmpty(filter.Category) && !filter.MinPrice.HasValue && 
+            !filter.MaxPrice.HasValue && !filter.Status.HasValue)
+        {
+            return await GetPagedAsync(pageParams);
+        }
+
+        var products = await _productRepository.GetFilteredAsync(
+            filter.Category,
+            filter.MinPrice,
+            filter.MaxPrice,
+            filter.Status);
+
+        var totalCount = products.Count();
+        var pagedItems = products
+            .Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
+            .Take(pageParams.PageSize)
+            .ToList();
+
+        var productDtos = _mapper.Map<List<ProductDto>>(pagedItems);
+        
+        _logger.LogInformation("Retornando {ItemCount} produtos da página {PageNumber} de {TotalPages}", 
+            productDtos.Count, pageParams.PageNumber, (int)Math.Ceiling((double)totalCount / pageParams.PageSize));
+
+        return new PageList<ProductDto>(productDtos, totalCount, pageParams.PageNumber, pageParams.PageSize);
+    }
+
     public async Task<ProductDto> CreateAsync(CreateProductDto createProductDto)
     {
         _logger.LogInformation("Criando novo produto: {ProductName}", createProductDto.Name);
