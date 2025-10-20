@@ -87,7 +87,7 @@ docker-compose up --build
 > **Nota:** O Docker Compose irá:
 > - Criar e configurar automaticamente o banco PostgreSQL
 > - Compilar e executar a aplicação .NET
-> - Aplicar as migrações do banco de dados
+> - Aplicar automaticamente as migrações do banco de dados
 > - Expor a API na porta 80
 
 ### 💻 Opção 2: Execução Local

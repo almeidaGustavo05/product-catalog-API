@@ -1,7 +1,9 @@
 using ProductCatalog.API.Middleware;
 using ProductCatalog.Application;
 using ProductCatalog.Infrastructure;
+using ProductCatalog.Infrastructure.Data;
 using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +35,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProductCatalogDbContext>();
+    context.Database.Migrate();
+}
 
 var webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 if (!Directory.Exists(webRootPath))
