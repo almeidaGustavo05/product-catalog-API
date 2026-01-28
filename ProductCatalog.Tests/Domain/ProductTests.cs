@@ -16,7 +16,7 @@ public class ProductTests
 
         var product = new Product(name, description, price, category);
 
-        product.Id.Should().Be(0);
+        product.Id.Should().Be(999);
         product.Name.Should().Be(name);
         product.Description.Should().Be(description);
         product.Price.Should().Be(price);
